@@ -1,0 +1,7 @@
+tr:nth-child(even) {
+    background: #DDD;
+}
+
+.current {
+    background: #CCC !important;
+}

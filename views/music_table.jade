@@ -1,0 +1,23 @@
+html
+    head
+        link(rel='stylesheet', href='css/index.css')
+    body
+        h1 Songs
+        audio(id='music_player' controls)
+            source(id='music_source' type='audio/mpeg')
+        table
+            thead
+                tr
+                    th 
+                    th Artist
+                    th Title
+                    th Album
+                    th Year
+                    th Track
+            tfoot
+                tr
+                    td(id='music_footer' colSpan=6) Loading
+            tbody(id='music_table')
+
+        script(type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+        script(type='text/javascript' src='js/index.js')
