@@ -1,6 +1,13 @@
 # plasma-web-server
 An MP3 web server using Node.js
 
+## Install Dependencies
+Run npm install:
+
+```bash
+    $ npm install
+```
+
 ## Database Installation
 Create audio database with the following SQL:
 
