@@ -12,6 +12,11 @@ Run schema.sql:
 ```bash
     $ psql -f schema.sql -d audio
 ```
+Update index.js to set your postgresql connection configuration
+
+```javascript
+    var connection_string = 'postgres://web-user@localhost:5432/audio';
+```
 
 ## Consuming MP3s
 Pass the webserver directories to consume the MP3 files within.
@@ -23,4 +28,4 @@ Pass the webserver directories to consume the MP3 files within.
 The directories only need be consumed once. Run the program without arguments to start the server without consuming.
 
 ## Browse Songs
-Open your HTML5 compliant browser to [http://localhost:300](http://localhost:3000).
+Open your HTML5 compliant browser to [http://localhost:3000](http://localhost:3000).
