@@ -7,5 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "audio-metadata": "^0.3.0",
+    "express": "^4.13.0",
+    "jade": "^1.11.0",
+    "pg": "^4.4.0",
+    "string.prototype.endswith": "^0.2.0"
+  }
 }
