@@ -23,4 +23,4 @@ Pass the webserver directories to consume the MP3 files within.
 The directories only need be consumed once. Run the program without arguments to start the server without consuming.
 
 ## Browse Songs
-Open your HTML5 compliant browser to http://localhost:3000.
+Open your HTML5 compliant browser to [http://localhost:300](http://localhost:3000).
