@@ -66,10 +66,17 @@ function receive_songs( json, text_status ) {
 }
 
 function play_song( song ) {
+    var song_row = $( '#song_row_' + song );
+
     $( '.current' ).removeClass( 'current' );
-    $( '#song_row_' + song ).addClass( 'current' );
+    song_row.addClass( 'current' );
 
     document.getElementById( 'music_source' ).src = '/song/' + song;
     document.getElementById( 'music_player' ).load();
     document.getElementById( 'music_player' ).play();
+
+    var title  = song_row.children().eq(2).text();
+    var artist = song_row.children().eq(1).text();
+
+    document.title = artist + ' - ' + title;
 }
