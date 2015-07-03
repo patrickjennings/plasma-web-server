@@ -78,5 +78,5 @@ function play_song( song ) {
     var title  = song_row.children().eq(2).text();
     var artist = song_row.children().eq(1).text();
 
-    document.title = artist + ' - ' + title;
+    document.title = title + ' - ' + artist;
 }
