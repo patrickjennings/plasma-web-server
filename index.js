@@ -31,6 +31,9 @@ function parse_mp3_file( file ) {
 
     var tags = meta_data.id3v1( buffer );
 
+    if( tags == null || Object.keys( tags ).length == 0 )
+        tags = meta_data.id3v2( buffer );
+
     if( Object.keys( tags ).length > 0 ) {
         var data = {
             title  : tags.title,
