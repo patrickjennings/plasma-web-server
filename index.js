@@ -111,12 +111,22 @@ app.get( '/', function( req, res ) {
 });
 
 app.get( '/songs', function( req, res ) {
+    var filter = '';
+    if( req.query.filter )
+        filter = req.query.filter;
+
     var client = new pg.Client( connection_string );
 
     client.connect();
 
     var query = client.query(
-        'SELECT song, artist, album, title, year, track FROM song ORDER BY artist, year, album, track'
+        'SELECT song, artist, album, title, year, track '
+       +  'FROM song '
+       + "WHERE title ilike '%' || $1 || '%' "
+       +    "OR artist ilike '%' || $1 || '%' "
+       +    "OR album ilike '%' || $1 || '%' "
+       +  'ORDER BY artist, year, album, track',
+       [ filter ]
     );
 
     var songs = [];

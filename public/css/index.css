@@ -5,3 +5,22 @@ tr:nth-child(even) {
 .current {
     background: #CD5 !important;
 }
+
+#music_search {
+    float: right;
+}
+
+#music_controls {
+    height: 35px;
+}
+
+#music_content {
+    position: fixed;
+    overflow-y: scroll;
+    height: 90%;
+    width: 99%;
+}
+
+#music_table {
+    width: 100%;
+}

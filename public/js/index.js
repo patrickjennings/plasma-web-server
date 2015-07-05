@@ -3,7 +3,7 @@ $( initialize );
 function initialize() {
     get_songs();
 
-    $( '#music_table' ).click( function( e ) {
+    $( '#music_tbody' ).click( function( e ) {
         if( e.target.type == 'submit' )
             play_song( e.target.value );
     } );
@@ -11,10 +11,14 @@ function initialize() {
     $( '#music_player' ).bind( 'ended', function() {
         $( '.current' ).next().find( 'button' ).click();
     });
+
+    $( '#music_search' ).change( get_songs );
 }
 
 function get_songs() {
-    var map = {};
+    var map = {
+        filter : document.getElementById( 'music_search' ).value
+    };
 
     $.get( '/songs/', map, receive_songs );
 }
@@ -61,7 +65,7 @@ function receive_songs( json, text_status ) {
         fragment.appendChild( song_row );
     }
 
-    $( '#music_table' ).empty().append( fragment );
+    $( '#music_tbody' ).empty().append( fragment );
     $( '#music_footer' ).hide();
 }
 
