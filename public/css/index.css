@@ -10,8 +10,14 @@ tr:nth-child(even) {
     float: right;
 }
 
+#album_art {
+    float: left;
+    height: 50px;
+}
+
 #music_controls {
-    height: 35px;
+    height: 55px;
+    text-align: center;
 }
 
 #music_content {

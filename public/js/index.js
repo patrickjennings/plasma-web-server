@@ -83,4 +83,25 @@ function play_song( song ) {
     var artist = song_row.children().eq(1).text();
 
     document.title = title + ' - ' + artist;
+
+    get_album_art( song );
+}
+
+function get_album_art( song ) {
+    var song_row = $( '#song_row_' + song );
+
+    var album  = song_row.children().eq(3).text();
+    var artist = song_row.children().eq(1).text();
+
+    var imageSearch = new google.search.ImageSearch();
+
+    imageSearch.setSearchCompleteCallback( this, function() {
+        if( imageSearch.results && imageSearch.results.length > 0 ) {
+            var url = imageSearch.results[0].tbUrl;
+
+            $( '#album_art' ).attr( 'src', url );
+        }
+    }, null );
+
+    imageSearch.execute( album + ' ' + artist );
 }

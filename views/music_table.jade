@@ -3,6 +3,7 @@ html
         link(rel='stylesheet', href='css/index.css')
     body
         div(id='music_controls')
+            img(id='album_art')
             audio(id='music_player' controls)
                 source(id='music_source' type='audio/mpeg')
             input(type='text' id='music_search' placeholder='search')
@@ -22,4 +23,7 @@ html
                 tbody(id='music_tbody')
 
         script(type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+        script(type='text/javascript' src='https://www.google.com/jsapi')
+        script(type='text/javascript').
+            google.load("search", "1")
         script(type='text/javascript' src='js/index.js')
