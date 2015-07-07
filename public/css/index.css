@@ -8,6 +8,7 @@ tr:nth-child(even) {
 
 #music_search {
     float: right;
+    margin-top: 10px;
 }
 
 #album_art {
@@ -18,6 +19,7 @@ tr:nth-child(even) {
 #music_controls {
     height: 55px;
     text-align: center;
+    vertical-align: middle;
 }
 
 #music_content {

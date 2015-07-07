@@ -53,7 +53,7 @@ function receive_songs( json, text_status ) {
             year_cell.appendChild( document.createTextNode( song.year ? song.year : '' ) );
 
         var track_cell = document.createElement( 'td' );
-            track_cell.appendChild( document.createTextNode( song.track ) );
+            track_cell.appendChild( document.createTextNode( song.track ? song.track : '' ) );
 
         song_row.appendChild( play_cell );
         song_row.appendChild( artist_cell );
@@ -98,8 +98,10 @@ function get_album_art( song ) {
     imageSearch.setSearchCompleteCallback( this, function() {
         if( imageSearch.results && imageSearch.results.length > 0 ) {
             var url = imageSearch.results[0].tbUrl;
+            var direct_url = imageSearch.results[0].url;
 
             $( '#album_art' ).attr( 'src', url );
+            $( '#album_art_link' ).attr( 'href', direct_url );
         }
     }, null );
 
