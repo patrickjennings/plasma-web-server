@@ -18,7 +18,7 @@ tr:nth-child(even) {
 }
 
 #music_controls {
-    height: 115px;
+    height: 110px;
 }
 
 #music_content {
@@ -30,4 +30,8 @@ tr:nth-child(even) {
 
 #music_table {
     width: 100%;
+}
+
+#artist,#album,#title {
+    display: block;
 }

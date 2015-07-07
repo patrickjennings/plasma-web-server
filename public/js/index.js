@@ -25,12 +25,17 @@ function get_songs() {
 
 function receive_songs( json, text_status ) {
     var fragment = document.createDocumentFragment();
+    var current_id = $( '.current' ).attr( 'id' );
 
     for( var i = 0; i < json.length; i++ ) {
         var song = json[ i ];
 
         var song_row = document.createElement( 'tr' );
             song_row.id = 'song_row_' + song.song;
+
+        if( current_id == song_row.id ) {
+            song_row.className = 'current';
+        }
 
         var play_cell = document.createElement( 'td' );
 

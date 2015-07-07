@@ -5,12 +5,12 @@ html
         div(id='music_controls')
             input(type='text' id='music_search' placeholder='search')
 
-            a(id='album_art_link' target='_blank')
-                img(id='album_art')
+            a(id='album_art_link' target='_blank' href='https://github.com/patrickjennings/plasma-web-server')
+                img(id='album_art' src='images/plasma.jpg')
 
-            div(id='artist')
-            div(id='album')
-            div(id='title')
+            b(id='artist') Plasma Web Server
+            b(id='album')
+            b(id='title')
 
             audio(id='music_player' controls)
                 source(id='music_source' type='audio/mpeg')
