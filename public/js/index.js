@@ -79,10 +79,15 @@ function play_song( song ) {
     document.getElementById( 'music_player' ).load();
     document.getElementById( 'music_player' ).play();
 
-    var title  = song_row.children().eq(2).text();
     var artist = song_row.children().eq(1).text();
+    var title  = song_row.children().eq(2).text();
+    var album  = song_row.children().eq(3).text();
 
     document.title = title + ' - ' + artist;
+
+    $( '#artist' ).text( artist );
+    $( '#album' ).text( album );
+    $( '#title' ).text( title );
 
     get_album_art( song );
 }

@@ -3,13 +3,18 @@ html
         link(rel='stylesheet', href='css/index.css')
     body
         div(id='music_controls')
+            input(type='text' id='music_search' placeholder='search')
+
             a(id='album_art_link' target='_blank')
                 img(id='album_art')
+
+            div(id='artist')
+            div(id='album')
+            div(id='title')
 
             audio(id='music_player' controls)
                 source(id='music_source' type='audio/mpeg')
 
-            input(type='text' id='music_search' placeholder='search')
         div(id='music_content')
             table(id='music_table')
                 thead

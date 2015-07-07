@@ -13,19 +13,18 @@ tr:nth-child(even) {
 
 #album_art {
     float: left;
-    height: 50px;
+    height: 100px;
+    margin-right: 5px;
 }
 
 #music_controls {
-    height: 55px;
-    text-align: center;
-    vertical-align: middle;
+    height: 115px;
 }
 
 #music_content {
     position: fixed;
     overflow-y: scroll;
-    height: 90%;
+    height: 84%;
     width: 99%;
 }
 
