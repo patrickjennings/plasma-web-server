@@ -1,3 +1,5 @@
+var current_song = null;
+
 $( initialize );
 
 function initialize() {
@@ -25,7 +27,6 @@ function get_songs() {
 
 function receive_songs( json, text_status ) {
     var fragment = document.createDocumentFragment();
-    var current_id = $( '.current' ).attr( 'id' );
 
     for( var i = 0; i < json.length; i++ ) {
         var song = json[ i ];
@@ -33,7 +34,7 @@ function receive_songs( json, text_status ) {
         var song_row = document.createElement( 'tr' );
             song_row.id = 'song_row_' + song.song;
 
-        if( current_id == song_row.id ) {
+        if( current_song == song.song ) {
             song_row.className = 'current';
         }
 
@@ -79,6 +80,8 @@ function play_song( song ) {
 
     $( '.current' ).removeClass( 'current' );
     song_row.addClass( 'current' );
+
+    current_song = song;
 
     document.getElementById( 'music_source' ).src = '/song/' + song;
     document.getElementById( 'music_player' ).load();
