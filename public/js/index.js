@@ -1,4 +1,5 @@
 var current_song = null;
+var last_fm_api_key = '8629283b656243d0088df83cd69b78fb';
 
 $( initialize );
 
@@ -87,19 +88,14 @@ function play_song( song ) {
     document.getElementById( 'music_player' ).load();
     document.getElementById( 'music_player' ).play();
 
-    var artist = song_row.children().eq(1).text();
-    var title  = song_row.children().eq(2).text();
-    var album  = song_row.children().eq(3).text();
-
-    document.title = title + ' - ' + artist;
-
-    $( '#artist' ).text( artist );
-    $( '#album' ).text( album );
-    $( '#title' ).text( title );
+    $( '#artist' ).text( 'loading' );
+    $( '#album' ).text( 'loading' );
+    $( '#title' ).text( 'loading' );
 
     get_album_art( song );
 }
 
+/*
 function get_album_art( song ) {
     var song_row = $( '#song_row_' + song );
 
@@ -120,3 +116,79 @@ function get_album_art( song ) {
 
     imageSearch.execute( album + ' ' + artist );
 }
+*/
+
+function get_album_art( song ) {
+    var song_row = $( '#song_row_' + song );
+
+    var artist = song_row.children().eq(1).text();
+    var title  = song_row.children().eq(2).text();
+    var album  = song_row.children().eq(3).text();
+
+    var map = {
+        track : title,
+        artist : artist,
+        method : 'track.getinfo',
+        api_key : last_fm_api_key,
+        format : 'json',
+        autocorrect : 1
+    };
+
+    var url = 'http://ws.audioscrobbler.com/2.0/';
+
+    $.get( url, map, function( json, text_status ) {
+        console.log( json );
+        if( json.track ) {
+            var track = json.track;
+
+            artist = track.artist ? track.artist.name : artist;
+            album  = track.album ? track.album.title : album;
+            title  = track.name;
+        }
+
+        $( '#artist' ).text( artist );
+        $( '#album' ).text( album );
+        $( '#title' ).text( title );
+
+        document.title = title + ' - ' + artist;
+    } );
+}
+
+/*
+function get_album_art( song ) {
+    function prep( str ) {
+        return '"' + str.replace(/[^a-zA-Z0-9 ]/g,'') + '"';
+    }
+
+    var song_row = $( '#song_row_' + song );
+
+    var artist = song_row.children().eq(1).text();
+    var title  = song_row.children().eq(2).text();
+    var album  = song_row.children().eq(3).text();
+
+    var map = {
+        query : 'artist:' + prep( artist ) + ' release:' + prep( album ) + ' recording:' + prep( title ),
+        fmt : 'json',
+        inc : 'releases',
+        limit : 1
+    };
+
+    var url = 'http://musicbrainz.org/ws/2/recording/';
+
+    $.get( url, map, function( json, text_status ) {
+        if( json.recordings.length > 0 ) {
+            var recording = json.recordings[0];
+
+            artist = recording['artist-credit'][0].artist.name;
+            album  = recording.releases[0].title;
+            title  = recording.title;
+        }
+
+        $( '#artist' ).text( artist );
+        $( '#album' ).text( album );
+        $( '#title' ).text( title );
+
+        document.title = title + ' - ' + artist;
+    } );
+}
+*/
