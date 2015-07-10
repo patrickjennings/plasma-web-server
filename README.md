@@ -1,5 +1,7 @@
 # plasma-web-server
-An MP3 web server using Node.js
+A MP3 web server using Node.js and Postgresql
+
+![alt text](https://raw.githubusercontent.com/patrickjennings/plasma-web-server/master/plasma-web-server.png "Plasma Web Server")
 
 ## Install Dependencies
 Run npm install:
