@@ -2,9 +2,15 @@ require('string.prototype.endswith');
 
 var express = require('express');
 var meta_data = require('audio-metadata');
-var fs = require('fs');
+var fs = require('graceful-fs');
 var pg = require('pg');
 var jade = require('jade');
+
+var app = express();
+
+console.log( 'Starting webserver' );
+
+app.listen( 3000 );
 
 var connection_string = 'postgres://web-user@localhost:5432/audio';
 
@@ -16,7 +22,6 @@ var client = new pg.Client( connection_string, function( err ) {
 } );
 
 client.on('drain', client.end.bind(client)); //disconnect client when all queries are finished
-client.connect();
 
 function save_audio_file( file, data ) {
     client.query( 'SELECT fn_create_or_update_song( $1, $2 )', [ file, data ], function( err ) {
@@ -27,24 +32,26 @@ function save_audio_file( file, data ) {
 }
 
 function parse_mp3_file( file ) {
-    var buffer = fs.readFileSync( file );
+    fs.readFile( file, function( err, buffer ) {
+        if( buffer ) {
+            var tags = meta_data.id3v2( buffer );
 
-    var tags = meta_data.id3v2( buffer );
+            if( tags == null || Object.keys( tags ).length == 0 )
+                tags = meta_data.id3v1( buffer );
 
-    if( tags == null || Object.keys( tags ).length == 0 )
-        tags = meta_data.id3v1( buffer );
+            if( Object.keys( tags ).length > 0 ) {
+                var data = {
+                    title  : tags.title,
+                    album  : tags.album,
+                    year   : parseInt( tags.year, 10 ),
+                    track  : parseInt( tags.track, 10 ),
+                    artist : tags.artist
+                };
 
-    if( Object.keys( tags ).length > 0 ) {
-        var data = {
-            title  : tags.title,
-            album  : tags.album,
-            year   : parseInt( tags.year, 10 ),
-            track  : parseInt( tags.track, 10 ),
-            artist : tags.artist
-        };
-
-        save_audio_file( file, data );
-    }
+                save_audio_file( file, data );
+            }
+        }
+    } );
 }
 
 function scan_audio_files( directory ) {
@@ -67,38 +74,32 @@ function scan_audio_files( directory ) {
     }
 }
 
-for( var i = 2; i < process.argv.length; i++ ) {
-    var directory = process.argv[i].replace(/\/$/,'');
+client.connect( function() {
+    for( var i = 2; i < process.argv.length; i++ ) {
+        var directory = process.argv[i].replace(/\/$/,'');
 
-    try {
-        if( !fs.statSync( directory ).isDirectory() ) {
-            console.error( directory, 'is not a directory' );
+        try {
+            if( !fs.statSync( directory ).isDirectory() ) {
+                console.error( directory, 'is not a directory' );
+                continue;
+            }
+        }
+        catch( e ) {
+            console.error( 'could not parse', directory );
             continue;
         }
+
+        client.query( "DELETE FROM song WHERE path LIKE $1 || '%'", [ directory ], function( err ) {
+            if( err ) {
+                return console.error( 'failed to truncate', directory, err );
+            }
+        } );
+
+        console.log( 'Scanning', directory );
+
+        scan_audio_files( directory );
     }
-    catch( e ) {
-        console.error( 'could not parse', directory );
-        continue;
-    }
-
-    client.query( "DELETE FROM song WHERE path LIKE $1 || '%'", [ directory ], function( err ) {
-        if( err ) {
-            return console.error( 'failed to truncate', directory, err );
-        }
-    } );
-
-    console.log( 'Scanning', directory );
-
-    scan_audio_files( directory );
-}
-
-if( client.queryQueue.length == 0 ) {
-    client.end();
-}
-
-console.log( 'Starting webserver' );
-
-var app = express();
+} );
 
 app.use( express.static( 'public' ) );
 
@@ -160,5 +161,3 @@ app.get( '/song/:song', function( req, res ) {
         client.end();
     });
 });
-
-app.listen( 3000 );
