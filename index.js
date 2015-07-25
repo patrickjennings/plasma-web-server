@@ -1,7 +1,7 @@
 require('string.prototype.endswith');
 
 var express = require('express');
-var meta_data = require('audio-metadata');
+var id3 = require('id3-parser');
 var fs = require('fs');
 var pg = require('pg');
 var jade = require('jade');
@@ -29,10 +29,7 @@ function save_audio_file( file, data ) {
 function parse_mp3_file( file ) {
     var buffer = fs.readFileSync( file );
 
-    var tags = meta_data.id3v2( buffer );
-
-    if( tags == null || Object.keys( tags ).length == 0 )
-        tags = meta_data.id3v1( buffer );
+    var tags = id3.parseFromBuffer( buffer );
 
     if( Object.keys( tags ).length > 0 ) {
         var data = {
