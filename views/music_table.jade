@@ -3,7 +3,10 @@ html
         link(rel='stylesheet', href='css/index.css')
     body
         div(id='music_controls')
-            input(type='text' id='music_search' placeholder='search')
+            div(style='float: right;')
+                input(type='text' id='music_search' placeholder='search')
+                a(href="javascript:$('.current button').focus();" style='margin: 10px;') Currently Playing
+                a(href="javascript:get_random_playlist();" style='margin: 10px;') Random Playlist
 
             a(id='album_art_link' target='_blank' href='https://github.com/patrickjennings/plasma-web-server')
                 img(id='album_art' src='images/plasma.jpg')

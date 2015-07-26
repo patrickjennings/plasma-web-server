@@ -158,4 +158,28 @@ app.get( '/song/:song', function( req, res ) {
     });
 });
 
+app.get( '/random', function( req, res ) {
+    var client = new pg.Client( connection_string );
+
+    client.connect();
+
+    var query = client.query(
+        'SELECT song, artist, album, title, year, track '
+      +  ' FROM song '
+      + ' ORDER BY RANDOM() '
+      + ' LIMIT 50 '
+    );
+
+    var songs = [];
+
+    query.on( 'row', function( row ) {
+        songs.push( row );
+    });
+
+    query.on( 'end', function( result ) {
+        res.json( songs );
+        client.end();
+    });
+});
+
 app.listen( 3000 );

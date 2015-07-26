@@ -35,3 +35,8 @@ tr:nth-child(even) {
 #artist,#album,#title {
     display: block;
 }
+
+a {
+    color: #BBB;
+    text-decoration: none;
+}

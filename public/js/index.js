@@ -120,3 +120,9 @@ function get_album_art( song ) {
 
     imageSearch.execute( album + ' ' + artist );
 }
+
+function get_random_playlist() {
+    var map = {};
+
+    $.get( '/random', map, receive_songs );
+}
