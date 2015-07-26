@@ -25,6 +25,7 @@ tr:nth-child(even) {
 
 #music_table {
     width: 100%;
+    border-collapse: collapse;
 }
 
 #artist,#album,#title {
