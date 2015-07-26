@@ -6,11 +6,6 @@ tr:nth-child(even) {
     background: #CD5 !important;
 }
 
-#music_search {
-    float: right;
-    margin-top: 10px;
-}
-
 #album_art {
     float: left;
     height: 100px;
