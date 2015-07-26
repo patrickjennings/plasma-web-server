@@ -1,5 +1,5 @@
 tr:nth-child(even) {
-    background: #DDD;
+    background: #EEE;
 }
 
 .current {
@@ -26,6 +26,10 @@ tr:nth-child(even) {
 #music_table {
     width: 100%;
     border-collapse: collapse;
+}
+
+#music_table td {
+    padding: 2px;
 }
 
 #artist,#album,#title {
