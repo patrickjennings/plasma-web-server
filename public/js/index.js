@@ -1,4 +1,5 @@
 var current_song = null;
+var lastfm_api = '8629283b656243d0088df83cd69b78fb';
 
 $( initialize );
 
@@ -94,6 +95,7 @@ function play_song( song ) {
     $( '#title' ).text( title );
 
     get_album_art( song );
+    get_artist_info( song );
 }
 
 function get_album_art( song ) {
@@ -122,4 +124,26 @@ function get_random_playlist() {
     var map = {};
 
     $.get( '/random', map, receive_songs );
+}
+
+function get_artist_info( song ) {
+    var artist = $( '#song_row_' + song ).children().eq(1).text();
+
+    var map = {
+        method      : 'artist.getinfo',
+        api_key     : lastfm_api,
+        autocorrect : 1,
+        format      : 'json',
+        artist      : artist
+    };
+
+    $.get( 'http://ws.audioscrobbler.com/2.0/', map, receive_artist_info );
+}
+
+function receive_artist_info( json ) {
+    var artist_node = json.artist;
+
+    if( artist_node ) {
+        $( '#artist_info' ).html( artist_node.bio.summary );
+    }
 }
