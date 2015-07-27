@@ -1,12 +1,14 @@
 html
     head
         link(rel='stylesheet', href='css/index.css')
+        link(rel='shortcut icon' id='icon' href='images/plasma.jpg')
     body
         div(id='music_controls')
             div(style='float: right;')
                 a(href="javascript:$('.current button').focus();" style='margin-right: 10px;') Currently Playing
                 a(href="javascript:get_random_playlist();" style='margin-right: 10px;') Random Playlist
-                input(type='text' id='music_search' placeholder='search')
+                input(type='text' id='music_search')
+                button(onclick='get_songs();') Search
 
             a(id='album_art_link' target='_blank' href='https://github.com/patrickjennings/plasma-web-server')
                 img(id='album_art' src='images/plasma.jpg')
@@ -30,7 +32,7 @@ html
                         th(width=75) Track
                 tfoot
                     tr
-                        td(id='music_footer' colSpan=6) Loading
+                        td(id='music_footer' colSpan=6) Search
                 tbody(id='music_tbody')
 
         script(type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')

@@ -3,8 +3,6 @@ var current_song = null;
 $( initialize );
 
 function initialize() {
-    get_songs();
-
     $( '#music_tbody' ).click( function( e ) {
         if( e.target.type == 'submit' )
             play_song( e.target.value );
@@ -13,8 +11,6 @@ function initialize() {
     $( '#music_player' ).bind( 'ended', function() {
         $( '.current' ).next().find( 'button' ).click();
     });
-
-    $( '#music_search' ).change( get_songs );
 }
 
 function get_songs() {
@@ -115,6 +111,7 @@ function get_album_art( song ) {
 
             $( '#album_art' ).attr( 'src', url );
             $( '#album_art_link' ).attr( 'href', direct_url );
+            $( '#icon' ).attr( 'href', url );
         }
     }, null );
 
