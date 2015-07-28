@@ -164,6 +164,7 @@ function receive_artist_info( json ) {
             artist_image.style.width = '100px';
             artist_image.style.cssFloat = 'left';
             artist_image.style.marginRight = '10px';
+            artist_image.style.marginBottom = '10px';
 
         var artist_info_div = document.createElement( 'div' );
             artist_info_div.innerHTML = artist.bio.summary;
@@ -227,6 +228,7 @@ function receive_album_info( json ) {
             album_image.style.width = '100px';
             album_image.style.cssFloat = 'left';
             album_image.style.marginRight = '10px';
+            album_image.style.marginBottom = '10px';
 
         var album_info_div = document.createElement( 'div' );
 
