@@ -1,4 +1,5 @@
 var current_song = null;
+var lastfm_api = '8629283b656243d0088df83cd69b78fb';
 
 $( initialize );
 
@@ -43,7 +44,13 @@ function receive_songs( json, text_status ) {
         play_cell.appendChild( play_button );
 
         var artist_cell = document.createElement( 'td' );
-            artist_cell.appendChild( document.createTextNode( song.artist ) );
+
+        var artist_anchor = document.createElement( 'a' );
+            artist_anchor.href = 'javascript:get_artist_info( ' + song.song + ' );';
+            artist_anchor.style.color = 'black';
+            artist_anchor.appendChild( document.createTextNode( song.artist ) );
+
+        artist_cell.appendChild( artist_anchor );
 
         var title_cell = document.createElement( 'td' );
             title_cell.appendChild( document.createTextNode( song.title ) );
@@ -122,4 +129,45 @@ function get_random_playlist() {
     var map = {};
 
     $.get( '/random', map, receive_songs );
+}
+
+function get_artist_info( song ) {
+    var artist = $( '#song_row_' + song ).children().eq(1).text();
+
+    var map = {
+        method      : 'artist.getinfo',
+        api_key     : lastfm_api,
+        autocorrect : 1,
+        format      : 'json',
+        artist      : artist
+    };
+
+    $.get( 'http://ws.audioscrobbler.com/2.0/', map, receive_artist_info );
+}
+
+function receive_artist_info( json ) {
+    if( json && json.artist ) {
+        var artist_info_div = document.createElement( 'div' );
+            artist_info_div.innerHTML = json.artist.bio.summary;
+
+        open_modal( artist_info_div );
+    }
+}
+
+function open_modal( html_node ) {
+    var overlay = document.createElement( 'div' );
+        overlay.className = 'overlay';
+        overlay.onclick = function() {
+            $( '.overlay' ).remove();
+        };
+
+    var modal = document.createElement( 'div' );
+        modal.className = 'modal';
+        modal.onclick = function( e ) { e.stopPropagation(); };
+
+    modal.appendChild( html_node );
+
+    overlay.appendChild( modal );
+
+    document.body.appendChild( overlay );
 }
