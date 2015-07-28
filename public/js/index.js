@@ -147,10 +147,25 @@ function get_artist_info( song ) {
 
 function receive_artist_info( json ) {
     if( json && json.artist ) {
-        var artist_info_div = document.createElement( 'div' );
-            artist_info_div.innerHTML = json.artist.bio.summary;
+        var artist = json.artist;
 
-        open_modal( artist_info_div );
+        var artist_image_url = artist.image[ artist.image.length - 1 ]['#text'];
+
+        var artist_div = document.createElement( 'div' );
+
+        var artist_image = document.createElement( 'img' );
+            artist_image.src = artist_image_url;
+            artist_image.style.width = '100px';
+            artist_image.style.cssFloat = 'left';
+            artist_image.style.marginRight = '10px';
+
+        var artist_info_div = document.createElement( 'div' );
+            artist_info_div.innerHTML = artist.bio.summary;
+
+        artist_div.appendChild( artist_image );
+        artist_div.appendChild( artist_info_div );
+
+        open_modal( artist_div );
     }
 }
 
