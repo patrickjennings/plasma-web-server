@@ -168,6 +168,10 @@ function receive_artist_info( json ) {
         var artist_info_div = document.createElement( 'div' );
             artist_info_div.innerHTML = artist.bio.summary;
 
+        $( artist_info_div ).find( 'a' ).each( function() {
+            this.target = '_blank';
+        } );
+
         artist_div.appendChild( artist_image );
         artist_div.appendChild( artist_info_div );
 
