@@ -232,6 +232,10 @@ function receive_album_info( json ) {
 
         if( album.wiki && album.wiki.summary ) {
             album_info_div.innerHTML = album.wiki.summary;
+
+            $( album_info_div ).find( 'a' ).each( function() {
+                this.target = '_blank';
+            } );
         }
 
         album_div.appendChild( album_image );
