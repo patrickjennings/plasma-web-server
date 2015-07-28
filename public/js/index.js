@@ -56,7 +56,13 @@ function receive_songs( json, text_status ) {
             title_cell.appendChild( document.createTextNode( song.title ) );
 
         var album_cell = document.createElement( 'td' );
-            album_cell.appendChild( document.createTextNode( song.album ) );
+
+        var album_anchor = document.createElement( 'a' );
+            album_anchor.href = 'javascript:get_album_info( ' + song.song + ' );';
+            album_anchor.style.color = 'black';
+            album_anchor.appendChild( document.createTextNode( song.album ) );
+
+        album_cell.appendChild( album_anchor );
 
         var year_cell = document.createElement( 'td' );
             year_cell.appendChild( document.createTextNode( song.year ? song.year : '' ) );
@@ -185,4 +191,48 @@ function open_modal( html_node ) {
     overlay.appendChild( modal );
 
     document.body.appendChild( overlay );
+}
+
+function get_album_info( song ) {
+    var song_row = $( '#song_row_' + song );
+    var artist   = song_row.children().eq(1).text();
+    var album    = song_row.children().eq(3).text();
+
+    var map = {
+        method      : 'album.getinfo',
+        api_key     : lastfm_api,
+        autocorrect : 1,
+        format      : 'json',
+        artist      : artist,
+        album       : album
+    };
+
+    $.get( 'http://ws.audioscrobbler.com/2.0/', map, receive_album_info );
+}
+
+function receive_album_info( json ) {
+    if( json && json.album ) {
+        var album = json.album;
+
+        var album_image_url = album.image[ album.image.length - 1 ]['#text'];
+
+        var album_div = document.createElement( 'div' );
+
+        var album_image = document.createElement( 'img' );
+            album_image.src = album_image_url;
+            album_image.style.width = '100px';
+            album_image.style.cssFloat = 'left';
+            album_image.style.marginRight = '10px';
+
+        var album_info_div = document.createElement( 'div' );
+
+        if( album.wiki && album.wiki.summary ) {
+            album_info_div.innerHTML = album.wiki.summary;
+        }
+
+        album_div.appendChild( album_image );
+        album_div.appendChild( album_info_div );
+
+        open_modal( album_div );
+    }
 }
