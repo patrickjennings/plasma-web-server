@@ -1,21 +1,30 @@
-require('string.prototype.endswith');
+var port = process.env.PORT || 3000;
 
-var express = require('express');
-var id3 = require('id3-parser');
-var fs = require('fs');
-var pg = require('pg');
-var jade = require('jade');
+var pg_port = process.env.PGPORT || 5432;
+var pg_user = process.env.PGUSER || 'web-user';
+var pg_pass = process.env.PGPASS || null;
+var pg_host = process.env.PGHOST || 'localhost';
+var pg_db   = process.env.PGDB   || 'audio';
 
-var connection_string = 'postgres://web-user@localhost:5432/audio';
+require( 'string.prototype.endswith' );
 
-var client = new pg.Client( connection_string, function( err ) {
-    if( err ) {
-        console.error( 'could not connect to postgres', err );
-        process.exit(1);
-    }
-} );
+var express = require( 'express'    );
+var id3     = require( 'id3-parser' );
+var fs      = require( 'fs'         );
+var pg      = require( 'pg'         );
+var jade    = require( 'jade'       );
 
-client.on('drain', client.end.bind(client)); //disconnect client when all queries are finished
+var pg_connection = {
+    port     : pg_port,
+    user     : pg_user,
+    password : pg_pass,
+    host     : pg_host,
+    database : pg_db
+};
+
+var client = new pg.Client( pg_connection );
+
+client.on( 'drain', client.end.bind( client ) ); //disconnect client when all queries are finished
 client.connect();
 
 function save_audio_file( file, data ) {
@@ -93,8 +102,6 @@ if( client.queryQueue.length == 0 ) {
     client.end();
 }
 
-console.log( 'Starting webserver' );
-
 var app = express();
 
 app.use( express.static( 'public' ) );
@@ -112,7 +119,7 @@ app.get( '/songs', function( req, res ) {
     if( req.query.filter )
         filter = req.query.filter;
 
-    var client = new pg.Client( connection_string );
+    var client = new pg.Client( pg_connection );
 
     client.connect();
 
@@ -143,7 +150,7 @@ app.get( '/song/:song', function( req, res ) {
         return res.status( 404 ).send( 'Song must be a number' );
     }
 
-    var client = new pg.Client( connection_string );
+    var client = new pg.Client( pg_connection );
 
     client.connect();
 
@@ -159,7 +166,7 @@ app.get( '/song/:song', function( req, res ) {
 });
 
 app.get( '/random', function( req, res ) {
-    var client = new pg.Client( connection_string );
+    var client = new pg.Client( pg_connection );
 
     client.connect();
 
@@ -182,4 +189,8 @@ app.get( '/random', function( req, res ) {
     });
 });
 
-app.listen( 3000 );
+var server = app.listen( port, function () {
+    var port = server.address().port;
+
+    console.log( 'Started webserver on port %s', port );
+} );
