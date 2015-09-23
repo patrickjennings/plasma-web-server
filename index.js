@@ -1,11 +1,14 @@
+// The server port
 var port = process.env.PORT || 3000;
 
+// Parameters for database access
 var pg_port = process.env.PGPORT || 5432;
 var pg_user = process.env.PGUSER || 'web-user';
 var pg_pass = process.env.PGPASS || null;
 var pg_host = process.env.PGHOST || 'localhost';
 var pg_db   = process.env.PGDB   || 'audio';
 
+// Requires
 require( 'string.prototype.endswith' );
 
 var express = require( 'express'    );
@@ -22,6 +25,9 @@ var pg_connection = {
     database : pg_db
 };
 
+/*
+ * Code to parse MP3 directories passed in as arguments
+ */
 var client = new pg.Client( pg_connection );
 
 client.on( 'drain', client.end.bind( client ) ); //disconnect client when all queries are finished
@@ -101,6 +107,10 @@ for( var i = 2; i < process.argv.length; i++ ) {
 if( client.queryQueue.length == 0 ) {
     client.end();
 }
+
+/*
+ * Code to create webserver
+ */
 
 var app = express();
 
@@ -192,5 +202,5 @@ app.get( '/random', function( req, res ) {
 var server = app.listen( port, function () {
     var port = server.address().port;
 
-    console.log( 'Started webserver on port %s', port );
+    console.log( 'Started plasma web server on port %s', port );
 } );
