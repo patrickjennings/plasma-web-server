@@ -14,5 +14,9 @@
     "jade": "^1.11.0",
     "pg": "^4.4.0",
     "string.prototype.endswith": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/patrickjennings/plasma-web-server"
   }
 }
