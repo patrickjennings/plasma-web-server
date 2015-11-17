@@ -16,6 +16,7 @@ var id3     = require( 'id3-parser' );
 var fs      = require( 'fs'         );
 var pg      = require( 'pg'         );
 var jade    = require( 'jade'       );
+var morgan  = require( 'morgan'     );
 
 var pg_connection = {
     port     : pg_port,
@@ -113,6 +114,8 @@ if( client.queryQueue.length == 0 ) {
  */
 
 var app = express();
+
+app.use( morgan( 'combined' ) );
 
 app.use( express.static( 'public' ) );
 

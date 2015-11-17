@@ -12,6 +12,7 @@
     "express": "^4.13.0",
     "id3-parser": "^0.1.2",
     "jade": "^1.11.0",
+    "morgan": "^1.6.1",
     "pg": "^4.4.0",
     "string.prototype.endswith": "^0.2.0"
   },
