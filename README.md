@@ -30,6 +30,9 @@ You may use environment variables PGPORT, PGUSER, PGPASS, PGHOST, PGDB or update
     var pg_host = process.env.PGHOST || 'localhost';
     var pg_db   = process.env.PGDB   || 'audio';
 ```
+```bash
+    $ PGPORT=5432 PGUSER=web-user PGHOST=localhost PGDB=audio node index.js
+```
 
 ## Consuming MP3s
 Pass the webserver directories to consume the MP3 files within.
