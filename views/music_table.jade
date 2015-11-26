@@ -8,7 +8,8 @@ html
             div(style='float: right;')
                 a(href="javascript:$('.current button').focus();" style='margin-right: 10px;') Currently Playing
                 a(href="javascript:get_random_playlist();" style='margin-right: 10px;') Random Playlist
-                input(type='text' id='music_search')
+                form(onsubmit='get_songs(); return false;' style='display: inline-block;')
+                    input(type='text' id='music_search')
                 button(onclick='get_songs();') Search
 
             a(id='album_art_link' target='_blank' href='https://github.com/patrickjennings/plasma-web-server')
