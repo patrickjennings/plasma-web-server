@@ -21,10 +21,14 @@ Run schema.sql:
 ```bash
     $ psql -f schema.sql -d audio
 ```
-Update index.js to set your postgresql connection configuration
+You may use environment variables PGPORT, PGUSER, PGPASS, PGHOST, PGDB or update index.js to set your postgresql connection configuration.
 
 ```javascript
-    var connection_string = 'postgres://web-user@localhost:5432/audio';
+    var pg_port = process.env.PGPORT || 5432;
+    var pg_user = process.env.PGUSER || 'web-user';
+    var pg_pass = process.env.PGPASS || null;
+    var pg_host = process.env.PGHOST || 'localhost';
+    var pg_db   = process.env.PGDB   || 'audio';
 ```
 
 ## Consuming MP3s
