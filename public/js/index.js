@@ -115,20 +115,28 @@ function get_album_art( song ) {
     var album  = song_row.children().eq(3).text();
     var artist = song_row.children().eq(1).text();
 
-    var imageSearch = new google.search.ImageSearch();
+    var map = {
+        method      : 'album.getinfo',
+        api_key     : lastfm_api,
+        autocorrect : 1,
+        format      : 'json',
+        artist      : artist,
+        album       : album
+    };
 
-    imageSearch.setSearchCompleteCallback( this, function() {
-        if( imageSearch.results && imageSearch.results.length > 0 ) {
-            var url = imageSearch.results[0].tbUrl;
-            var direct_url = imageSearch.results[0].url;
+    $.get( 'http://ws.audioscrobbler.com/2.0/', map, receive_album_art_info );
+}
 
-            $( '#album_art' ).attr( 'src', url );
-            $( '#album_art_link' ).attr( 'href', direct_url );
-            $( '#icon' ).attr( 'href', url );
-        }
-    }, null );
+function receive_album_art_info( json ) {
+    if( json && json.album ) {
+        var album = json.album;
 
-    imageSearch.execute( album + ' ' + artist );
+        var album_image_url = album.image[ album.image.length - 1 ]['#text'];
+
+        $( '#album_art' ).attr( 'src', album_image_url );
+        $( '#album_art_link' ).attr( 'href', album_image_url );
+        $( '#icon' ).attr( 'href', album_image_url );
+    }
 }
 
 function get_random_playlist() {
