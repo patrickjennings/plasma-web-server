@@ -16,7 +16,7 @@ function initialize() {
 
 function get_songs() {
     var map = {
-        filter : document.getElementById( 'music_search' ).value
+        search : document.getElementById( 'music_search' ).value
     };
 
     $.get( '/songs/', map, receive_songs );

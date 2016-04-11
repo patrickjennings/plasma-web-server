@@ -127,24 +127,40 @@ app.get( '/', function( req, res ) {
     res.end( html );
 });
 
+// Remove characters reserved for tsquery
+function prep_tsquery_string( search_string ) {
+    if( !search_string || typeof( search_string ) != 'string' )
+        return null;
+
+    search_string = search_string.replace( /[&|!*:]/g, '' );
+    if( !search_string )
+        return null;
+
+    return search_string.split( / +/ ).join( ':* & ' ) + ':*';
+}
+
 app.get( '/songs', function( req, res ) {
-    var filter = '';
-    if( req.query.filter )
-        filter = req.query.filter;
+    var query_values = [];
+
+    var query_string = 'SELECT song, artist, album, title, year, track FROM song WHERE TRUE';
+
+    var search = prep_tsquery_string( req.query.search );
+    if( search ) {
+        var i = query_values.length + 1;
+        var tsquery = "to_tsquery( 'english', $" + i + " ) || to_tsquery( 'simple', $" + i + ' )';
+
+        query_string += ' AND song IN ( SELECT fn_get_songs_by_query( ' + tsquery + ' ) )';
+
+        query_values.push( search );
+    }
+
+    query_string += ' ORDER BY artist, year, album, track';
 
     var client = new pg.Client( pg_connection );
 
     client.connect();
 
-    var query = client.query(
-        'SELECT song, artist, album, title, year, track '
-       +  'FROM song '
-       + "WHERE title ilike '%' || $1 || '%' "
-       +    "OR artist ilike '%' || $1 || '%' "
-       +    "OR album ilike '%' || $1 || '%' "
-       +  'ORDER BY artist, year, album, track',
-       [ filter ]
-    );
+    var query = client.query( query_string, query_values );
 
     var songs = [];
 
@@ -184,10 +200,39 @@ app.get( '/random', function( req, res ) {
     client.connect();
 
     var query = client.query(
-        'SELECT song, artist, album, title, year, track '
-      +  ' FROM song '
-      + ' ORDER BY RANDOM() '
+        'SELECT song, artist, album, title, year, track'
+      +  ' FROM song'
+      + ' ORDER BY RANDOM()'
       + ' LIMIT 50 '
+    );
+
+    var songs = [];
+
+    query.on( 'row', function( row ) {
+        songs.push( row );
+    });
+
+    query.on( 'end', function( result ) {
+        res.json( songs );
+        client.end();
+    });
+});
+
+app.get( '/search', function( req, res ) {
+    var search = prep_tsquery_string( req.query.search );
+    if( !search ) {
+        return res.status( 404 ).send( 'Requires search' );
+    }
+
+    var tsquery = "to_tsquery( 'english', $1 ) || to_tsquery( 'simple', $1 )";
+
+    var client = new pg.Client( pg_connection );
+
+    client.connect();
+
+    var query = client.query(
+        'SELECT * FROM fn_fuzzy_search_song( ' + tsquery + ' )',
+        [ search ]
     );
 
     var songs = [];
