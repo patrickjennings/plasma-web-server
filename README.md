@@ -11,15 +11,15 @@ Run npm install:
 ```
 
 ## Database Installation
-Create audio database with the following SQL:
+Create plasma database with the following SQL:
 
 ```sql
-    CREATE DATABASE audio;
+    CREATE DATABASE plasma;
 ```
 Run schema.sql:
 
 ```bash
-    $ psql -f schema.sql -d audio
+    $ psql -f schema.sql -d plasma
 ```
 You may use environment variables PGPORT, PGUSER, PGPASS, PGHOST, PGDB or update index.js to set your postgresql connection configuration.
 
@@ -28,10 +28,10 @@ You may use environment variables PGPORT, PGUSER, PGPASS, PGHOST, PGDB or update
     var pg_user = process.env.PGUSER || 'web-user';
     var pg_pass = process.env.PGPASS || null;
     var pg_host = process.env.PGHOST || 'localhost';
-    var pg_db   = process.env.PGDB   || 'audio';
+    var pg_db   = process.env.PGDB   || 'plasma';
 ```
 ```bash
-    $ PGPORT=5432 PGUSER=web-user PGHOST=localhost PGDB=audio node index.js
+    $ PGPORT=5432 PGUSER=web-user PGHOST=localhost PGDB=plasma node index.js
 ```
 
 ## Consuming MP3s

@@ -6,7 +6,7 @@ var pg_port = process.env.PGPORT || 5432;
 var pg_user = process.env.PGUSER || 'web-user';
 var pg_pass = process.env.PGPASS || null;
 var pg_host = process.env.PGHOST || 'localhost';
-var pg_db   = process.env.PGDB   || 'audio';
+var pg_db   = process.env.PGDB   || 'plasma';
 
 // Requires
 require( 'string.prototype.endswith' );

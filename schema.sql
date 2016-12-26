@@ -26,8 +26,8 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION fn_get_songs_by_query( in_query tsquery )
-    RETURNS SETOF integer
+CREATE OR REPLACE FUNCTION fn_get_tsquery_from_text( in_query text )
+    RETURNS SETOF tsquery
     AS $$
 BEGIN
     RETURN QUERY
@@ -36,6 +36,21 @@ BEGIN
          WHERE to_tsvector( 'english', coalesce( artist, '' ) ) || to_tsvector( 'simple', coalesce( artist, '' ) )
             || to_tsvector( 'english', coalesce( title,  '' ) ) || to_tsvector( 'simple', coalesce( title,  '' ) )
             || to_tsvector( 'english', coalesce( album,  '' ) ) || to_tsvector( 'simple', coalesce( album,  '' ) )
+            @@ in_query;
+
+    RETURN;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fn_get_songs_by_query( in_query tsquery )
+    RETURNS SETOF integer
+    AS $$
+BEGIN
+    RETURN QUERY
+        SELECT song
+          FROM song
+         WHERE to_tsvector( 'english', coalesce( artist, '' ) || ' ' || coalesce( title, '' ) || ' ' || coalesce( album, '' ) )
+            || to_tsvector( 'simple',  coalesce( artist, '' ) || ' ' || coalesce( title, '' ) || ' ' || coalesce( album, '' ) )
             @@ in_query;
 
     RETURN;
@@ -85,3 +100,12 @@ BEGIN
     RETURN;
 END
 $$ LANGUAGE plpgsql;
+
+CREATE INDEX song_tsvector_index
+    ON song
+ USING gin(
+    (
+        to_tsvector('english'::regconfig, ((((COALESCE(artist, ''::text) || ' '::text) || COALESCE(title, ''::text)) || ' '::text) || COALESCE(album, ''::text)))
+     || to_tsvector('simple'::regconfig,  ((((COALESCE(artist, ''::text) || ' '::text) || COALESCE(title, ''::text)) || ' '::text) || COALESCE(album, ''::text)))
+    )
+);
