@@ -1,8 +1,8 @@
 {
-  "name": "web-streamer",
+  "name": "plasma-web-server",
   "version": "1.1.0",
-  "description": "A HTTP MP3 streamer and web interface",
-  "main": "index.js",
+  "description": "A HTTP MP3 streamer and web interface.",
+  "main": "plasma.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
