@@ -1,7 +1,7 @@
 {
   "name": "web-streamer",
-  "version": "1.0.0",
-  "description": "a http mp3 streamer",
+  "version": "1.1.0",
+  "description": "A HTTP MP3 streamer and web interface",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,12 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.13.0",
-    "id3-parser": "^0.1.2",
-    "jade": "^1.11.0",
-    "morgan": "^1.6.1",
-    "pg": "^4.4.0",
-    "string.prototype.endswith": "^0.2.0"
+    "express": "^4.14.0",
+    "id3-parser": "^1.1.1",
+    "pug": "^2.0.0-beta6",
+    "morgan": "^1.7.0",
+    "pg": "^6.1.2",
+    "glob": "^7.1.1",
+    "async": "^2.1.4"
   },
   "repository": {
     "type": "git",
