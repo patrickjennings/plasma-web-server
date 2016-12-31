@@ -5,14 +5,14 @@ var express = require( 'express' );
 var morgan  = require( 'morgan'  );
 
 // Local requires.
-var scan   = require( './scan'   );
-var routes = require( './routes' );
-var config = require( './config' );
+var scan   = require( './lib/scan'   );
+var routes = require( './lib/routes' );
+var config = require( './lib/config' );
 
 
 // Parse MP3 directories passed in as arguments.
 for( var i = 2; i < process.argv.length; i++ ) {
-    var directory = process.argv[i].replace(/\/$/,'');
+    var directory = process.argv[ i ].replace( /\/$/, '' );
 
     console.log( 'Scanning %s.', directory );
 

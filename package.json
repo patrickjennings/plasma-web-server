@@ -15,7 +15,8 @@
     "morgan": "^1.7.0",
     "pg": "^6.1.2",
     "glob": "^7.1.1",
-    "async": "^2.1.4"
+    "async": "^2.1.4",
+    "pg-native": "1.10.0"
   },
   "repository": {
     "type": "git",
