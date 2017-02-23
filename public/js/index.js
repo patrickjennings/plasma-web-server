@@ -1,5 +1,6 @@
 var current_song = null;
 var lastfm_api = '8629283b656243d0088df83cd69b78fb';
+var lastfm_endpoint = 'https://ws.audioscrobbler.com/2.0/';
 
 $( initialize );
 
@@ -124,7 +125,7 @@ function get_album_art( song ) {
         album       : album
     };
 
-    $.get( 'http://ws.audioscrobbler.com/2.0/', map, receive_album_art_info );
+    $.get( lastfm_endpoint, map, receive_album_art_info );
 }
 
 function receive_album_art_info( json ) {
@@ -156,7 +157,7 @@ function get_artist_info( song ) {
         artist      : artist
     };
 
-    $.get( 'http://ws.audioscrobbler.com/2.0/', map, receive_artist_info );
+    $.get( lastfm_endpoint, map, receive_artist_info );
 }
 
 function receive_artist_info( json ) {
@@ -220,7 +221,7 @@ function get_album_info( song ) {
         album       : album
     };
 
-    $.get( 'http://ws.audioscrobbler.com/2.0/', map, receive_album_info );
+    $.get( lastfm_endpoint, map, receive_album_info );
 }
 
 function receive_album_info( json ) {
