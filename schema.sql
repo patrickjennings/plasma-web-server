@@ -38,16 +38,16 @@ END
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fn_get_tsquery_from_text( in_query text )
-    RETURNS SETOF tsquery
+CREATE OR REPLACE FUNCTION fn_get_tsquery_from_TEXT( in_query TEXT )
+    RETURNS SETOF TSQUERY
     AS $$
 BEGIN
     RETURN QUERY
         SELECT song
           FROM song
-         WHERE to_tsvector( 'english', coalesce( artist, '' ) ) || to_tsvector( 'simple', coalesce( artist, '' ) )
-            || to_tsvector( 'english', coalesce( title,  '' ) ) || to_tsvector( 'simple', coalesce( title,  '' ) )
-            || to_tsvector( 'english', coalesce( album,  '' ) ) || to_tsvector( 'simple', coalesce( album,  '' ) )
+         WHERE TO_TSVECTOR( 'english', COALESCE( artist, '' ) ) || TO_TSVECTOR( 'simple', COALESCE( artist, '' ) )
+            || TO_TSVECTOR( 'english', COALESCE( title,  '' ) ) || TO_TSVECTOR( 'simple', COALESCE( title,  '' ) )
+            || TO_TSVECTOR( 'english', COALESCE( album,  '' ) ) || TO_TSVECTOR( 'simple', COALESCE( album,  '' ) )
             @@ in_query;
 
     RETURN;
@@ -55,15 +55,15 @@ END
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fn_get_songs_by_query( in_query tsquery )
+CREATE OR REPLACE FUNCTION fn_get_songs_by_query( in_query TSQUERY )
     RETURNS SETOF integer
     AS $$
 BEGIN
     RETURN QUERY
         SELECT song
           FROM song
-         WHERE to_tsvector( 'english', coalesce( artist, '' ) || ' ' || coalesce( title, '' ) || ' ' || coalesce( album, '' ) )
-            || to_tsvector( 'simple',  coalesce( artist, '' ) || ' ' || coalesce( title, '' ) || ' ' || coalesce( album, '' ) )
+         WHERE TO_TSVECTOR( 'english', COALESCE( artist, '' ) || ' ' || COALESCE( title, '' ) || ' ' || COALESCE( album, '' ) )
+            || TO_TSVECTOR( 'simple',  COALESCE( artist, '' ) || ' ' || COALESCE( title, '' ) || ' ' || COALESCE( album, '' ) )
             @@ in_query;
 
     RETURN;
@@ -71,8 +71,8 @@ END
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fn_fuzzy_search_song( in_query tsquery )
-    RETURNS TABLE( match text, match_type text )
+CREATE OR REPLACE FUNCTION fn_fuzzy_search_song( in_query TSQUERY )
+    RETURNS TABLE( match TEXT, match_type TEXT )
     AS $$
 BEGIN
     RETURN QUERY
@@ -80,34 +80,34 @@ BEGIN
         SELECT artist AS match,
                'artist' AS match_type,
                ts_rank(
-                   to_tsvector( 'english', coalesce( artist, '' ) ),
+                   TO_TSVECTOR( 'english', COALESCE( artist, '' ) ),
                    in_query
                ) AS match_rank
           FROM song
-         WHERE to_tsvector( 'english', coalesce( artist, '' ) ) @@ in_query
+         WHERE TO_TSVECTOR( 'english', COALESCE( artist, '' ) ) @@ in_query
          GROUP BY artist
         UNION ALL
         SELECT album AS match,
                'album' AS match_type,
                ts_rank(
-                   to_tsvector( 'english', coalesce( album, '' ) ),
+                   TO_TSVECTOR( 'english', COALESCE( album, '' ) ),
                    in_query
                ) AS match_rank
           FROM song
-         WHERE to_tsvector( 'english', coalesce( album, '' ) ) @@ in_query
+         WHERE TO_TSVECTOR( 'english', COALESCE( album, '' ) ) @@ in_query
          GROUP BY album
         UNION ALL
         SELECT title AS match,
                'title' AS match_type,
                ts_rank(
-                   to_tsvector( 'english', coalesce( title, '' ) ),
+                   TO_TSVECTOR( 'english', COALESCE( title, '' ) ),
                    in_query
                ) AS match_rank
           FROM song
-         WHERE to_tsvector( 'english', coalesce( title, '' ) ) @@ in_query
+         WHERE TO_TSVECTOR( 'english', COALESCE( title, '' ) ) @@ in_query
          GROUP BY title
     )
-    SELECT m.match::text, m.match_type
+    SELECT m.match::TEXT, m.match_type
       FROM matches m
      ORDER BY m.match_rank DESC;
 
@@ -120,7 +120,7 @@ CREATE INDEX song_tsvector_index
     ON song
  USING gin(
     (
-        to_tsvector('english'::regconfig, ((((COALESCE(artist, ''::text) || ' '::text) || COALESCE(title, ''::text)) || ' '::text) || COALESCE(album, ''::text)))
-     || to_tsvector('simple'::regconfig,  ((((COALESCE(artist, ''::text) || ' '::text) || COALESCE(title, ''::text)) || ' '::text) || COALESCE(album, ''::text)))
+        TO_TSVECTOR('english'::REGCONFIG, ((((COALESCE(artist, ''::TEXT) || ' '::TEXT) || COALESCE(title, ''::TEXT)) || ' '::TEXT) || COALESCE(album, ''::TEXT)))
+     || TO_TSVECTOR('simple'::REGCONFIG,  ((((COALESCE(artist, ''::TEXT) || ' '::TEXT) || COALESCE(title, ''::TEXT)) || ' '::TEXT) || COALESCE(album, ''::TEXT)))
     )
 );
